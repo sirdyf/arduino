@@ -4,7 +4,7 @@
  * Версия без сервомотора
  * Copyright 2015 Dmitry
  * original:
- * Copyright 2015 Yuriy Tim 
+ * Copyright 2015 Yuriy Tim
  * Полное описание создания на сайте http://tim4dev.com
 */
 
@@ -28,16 +28,6 @@ int in2 = 8;
 int enB = 5;
 int in3 = 7;
 int in4 = 6;
-
-void setup() {
-// инициализируем все пины для управления двигателями как outputs
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
-}
 
 byte SPEED_CURRENT = 0; // текущая скорость моторов
 
@@ -75,7 +65,7 @@ const int DST_TRH_TURN = 28;
 // Если ближе, то стоп и назад
 const int DST_TRH_BACK = 15;
 
-/* пины для подключения HC-SR04 Ultrasonic Module Distance Measuring 
+/* пины для подключения HC-SR04 Ultrasonic Module Distance Measuring
  * 13, 2 цифровые пины
  * 14, 15 аналоговые пины A0 и A1 соответственно
  */
@@ -88,9 +78,16 @@ const int SONIC_DISTANCE_MIN = 2;
 /******************************************
   Main program
 ******************************************/
-
 void setup() {
-  Serial.begin(9600);           // set up Serial library at 9600 bps
+  // инициализируем все пины для управления двигателями как outputs
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+
+  Serial.begin(9600); // set up Serial library at 9600 bps
   if (debug > 1) Serial.println(VERSION);
 
   pinMode(SONIC_PIN_TRIG, OUTPUT);
@@ -101,7 +98,6 @@ void setup() {
     delay(3000);
   }
 }
-
 void loop() {
   if (debug  > 1) Serial.println("\n*** new loop() start ***\n");
   // сравнить измеренные расстояния до препятствий
@@ -262,7 +258,7 @@ void motorStop()  {
   // motorRearLeft.run(RELEASE);
   // motorRearRight.run(RELEASE);
 }
-void motorFrontLeftRun(int mode){
+void motorFrontLeftRun(int mode) {
   if (mode == RELEASE) {
     // выключаем двигатели
     digitalWrite(in1, LOW);
@@ -271,7 +267,7 @@ void motorFrontLeftRun(int mode){
     // запуск двигателя A
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
-  }else if (mode == BACKWARD) {
+  } else if (mode == BACKWARD) {
     // запуск двигателя A реверс
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
@@ -279,19 +275,19 @@ void motorFrontLeftRun(int mode){
     if (debug > 1) Serial.println("Unknown mode");
   }
 }
-void motorFrontRightRun(int mode){
+void motorFrontRightRun(int mode) {
   if (mode == RELEASE) {
     // выключаем двигатели
     digitalWrite(in3, LOW);
     digitalWrite(in4, LOW);
   } else if (mode == FORWARD) {
     // запуск двигателя A
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-  }else if (mode == BACKWARD) {
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+  } else if (mode == BACKWARD) {
     // запуск двигателя A реверс
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
   } else {
     if (debug > 1) Serial.println("Unknown mode");
   }

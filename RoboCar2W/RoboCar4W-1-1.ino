@@ -17,7 +17,7 @@
  * Больше 1 - выдача отладочных сообщений
  * Больше 5 - реально моторы не включаются и дистанция не замеряется, а генерируется рандомно
  */
-byte debug = 0;
+byte debug = 2;
 
 // первый двигатель
 int enA = 10;
@@ -53,17 +53,17 @@ byte MOTOR_PREV_DIRECTION; // предыдущее выполненное нап
  * Задержки для езды, поворотов на месте и плавных поворотов.
  * Подбираются экспериментально.
  */
-const int DELAY_RUN    = 2;
-const int DELAY_RUN_BACK = 50;
+const int DELAY_RUN    = 20;
+const int DELAY_RUN_BACK = 500;
 const int DELAY_ROTATE = 500;
 const int DELAY_TURN   = 500;
 const int DELAY_TURN_BACK = 500;
 
 // в сантиметрах (distance threshold) Пороги расстояний до препятствия
 // Если ближе, то резкий разворот на месте, иначе плавный доворот
-const int DST_TRH_TURN = 28;
+const int DST_TRH_TURN = 30;
 // Если ближе, то стоп и назад
-const int DST_TRH_BACK = 15;
+const int DST_TRH_BACK = 10;
 
 /* пины для подключения HC-SR04 Ultrasonic Module Distance Measuring
  * 13, 2 цифровые пины
@@ -127,9 +127,10 @@ void loop() {
   // определить направление поворота
   // прямо
   if ( distance > DST_TRH_TURN )   {
+    motorRunSlow();
     motorRunForward();
   } else {
-    motorStop();
+    motorStopSlow();
     // направление поворота выбираем рандомно
     int rnd = random(1, 10);
     if (rnd > 5) {
@@ -298,7 +299,7 @@ void motorStopSlow()  {
   if (debug > 1) Serial.println("Stop slow");
   if (debug > 5) return;
   int speed;
-  int diff = SPEED_CURRENT / 3; // сбрасываем скорость в 3 приема
+  int diff = SPEED_CURRENT / 5; // сбрасываем скорость в 5 приема
   for (speed = SPEED_CURRENT; speed <= 0; speed -= diff) {
     motorSetSpeed(speed);
     delay(150);
@@ -311,7 +312,7 @@ void motorRunSlow()  {
   if (debug) Serial.println("Stop slow");
   if (debug > 5) return;
   int speed;
-  int diff = (255 - SPEED_CURRENT) / 3; // набираем скорость в 3 приема
+  int diff = (255 - SPEED_CURRENT) / 5; // набираем скорость в 5 приема
   for (speed = SPEED_CURRENT; speed > 255; speed += diff) {
     motorSetSpeed(speed);
     delay(150);
